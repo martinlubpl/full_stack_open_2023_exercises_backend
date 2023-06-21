@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 
-const persons = [
+let persons = [
   {
     id: 1,
     name: "Arto Hellas",
@@ -49,6 +49,13 @@ app.get("/api/persons/:id", (req, res) => {
   } else {
     res.status(404).send("404 wrong id"); //
   }
+});
+
+//delete entry by id
+app.delete("/api/persons/:id", (req, res) => {
+  const personId = Number(req.params.id);
+  persons = persons.filter((person) => person.id !== personId);
+  res.status(204).send("just deleted");
 });
 
 const PORT = 3001;
