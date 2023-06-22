@@ -9,3 +9,21 @@ GET http://localhost:3001/api/persons/4
 
 ### delete
 DELETE http://localhost:3001/api/persons/4
+
+### wrong add
+POST http://localhost:3001/api/persons/
+content-type: application/json
+
+{
+  "content": "asdf",
+  "important": "true"
+}
+
+### proper add
+POST http://localhost:3001/api/persons/
+content-type: application/json
+
+{
+  "name": "Marcin",
+  "number": "555"
+}

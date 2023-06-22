@@ -58,6 +58,32 @@ app.delete("/api/persons/:id", (req, res) => {
   res.status(204).send("just deleted");
 });
 
+//add entry
+app.use(express.json());
+const getNewId = () => {
+  const maxId =
+    persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
+  return maxId + 1;
+};
+app.post("/api/persons/", (req, res) => {
+  const newPerson = req.body;
+  if (!newPerson.name || !newPerson.number) {
+    return res.status(400).json({ error: "content missing" });
+  }
+  const person = {
+    id: getNewId(),
+    name: req.body.name,
+    number: req.body.number,
+  };
+  console.log(person);
+  persons = persons.concat(person);
+  // console.log(persons);
+  res.json(person);
+});
+
+//update entry
+
+//
 const PORT = 3001;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
