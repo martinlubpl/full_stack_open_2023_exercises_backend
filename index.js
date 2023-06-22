@@ -1,6 +1,13 @@
 const express = require("express");
-const app = express();
+const morgan = require("morgan");
 
+const app = express();
+app.use(express.json());
+// morgan("tiny");
+morgan.token("body", (request) => JSON.stringify(request.body));
+app.use(morgan("tiny"));
+
+//const
 let persons = [
   {
     id: 1,
@@ -59,7 +66,7 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 
 //add entry
-app.use(express.json());
+// use express json moved
 const getNewId = () => {
   // const maxId =
   //   persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;

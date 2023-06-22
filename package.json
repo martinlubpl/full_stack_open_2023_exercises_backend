@@ -19,7 +19,8 @@
   },
   "homepage": "https://github.com/martinlubpl/full_stack_open_2023_exercises_backend#readme",
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
