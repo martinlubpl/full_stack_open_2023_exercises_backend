@@ -61,9 +61,11 @@ app.delete("/api/persons/:id", (req, res) => {
 //add entry
 app.use(express.json());
 const getNewId = () => {
-  const maxId =
-    persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
-  return maxId + 1;
+  // const maxId =
+  //   persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
+  // return maxId + 1;
+
+  return Math.floor(Math.random() * 1000000);
 };
 app.post("/api/persons/", (req, res) => {
   const newPerson = req.body;
