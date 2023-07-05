@@ -56,14 +56,19 @@ app.get('/info', (req, res) => {
 
 //single entry
 app.get('/api/persons/:id', (req, res) => {
-  const personId = Number(req.params.id)
-  console.log(personId)
-  const person = persons.find((per) => per.id === personId)
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).send('404 wrong id') //
-  }
+  // const personId = Number(req.params.id)
+  // console.log(personId)
+  // const person = persons.find((per) => per.id === personId)
+  // if (person) {
+  //   res.json(person)
+  // } else {
+  //   res.status(404).send('404 wrong id') //
+  // }
+
+  //no need to change to number anymore
+  Person.findById(req.params.id).then((returnedPerson) => {
+    res.json(returnedPerson)
+  })
 })
 
 //delete entry by id
@@ -87,18 +92,31 @@ app.post('/api/persons/', (req, res) => {
   if (!newPerson.name || !newPerson.number) {
     return res.status(400).json({ error: 'content missing' })
   }
-  if (persons.some((person) => person.name === newPerson.name)) {
-    return res.status(400).json({ error: 'name must be unique' })
-  }
-  const person = {
-    id: getNewId(),
+
+  //check if person exits
+  // if (persons.some((person) => person.name === newPerson.name)) {
+  //   return res.status(400).json({ error: 'name must be unique' })
+  // }
+
+  // const person = {
+  //   id: getNewId(),
+  //   name: req.body.name,
+  //   number: req.body.number,
+  // }
+
+  const person = new Person({
     name: req.body.name,
     number: req.body.number,
-  }
+  })
+
   console.log(person)
-  persons = persons.concat(person)
+  // persons = persons.concat(person)
+  person.save().then((savedPerson) => {
+    res.json(savedPerson)
+  })
+
   // console.log(persons);
-  res.json(person)
+  // res.json(person)
 })
 
 //update entry
