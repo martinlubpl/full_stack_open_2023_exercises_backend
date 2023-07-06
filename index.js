@@ -51,9 +51,16 @@ app.get('/api/persons', (req, res) => {
 })
 //info
 app.get('/info', (req, res) => {
-  let html = `Phonebook has info for ${persons.length} people<br/>`
-  html += new Date()
-  res.send(html)
+  // let html = `Phonebook has info for ${persons.length} people<br/>`
+  // html += new Date()
+  // res.send(html)
+
+  //retrieve from mongo instead of persons array
+  Person.find({}).then((persons) => {
+    let html = `Phonebook has info of ${persons.length} people<br/>`
+    html += new Date()
+    res.send(html)
+  })
 })
 
 // SINGLE ENTRY
@@ -68,10 +75,6 @@ app.get('/api/persons/:id', (req, res, next) => {
       }
     })
     .catch((err) => {
-      // console.error('person id error:', err)
-      // res
-      //   .status(400)
-      //   .send({ error: 'malformatted id, id must be 12bytes long' })
       next(err)
     })
 })
