@@ -4,9 +4,11 @@ const morgan = require('morgan')
 const cors = require('cors')
 
 const app = express()
+
 app.use(cors())
-app.use(express.static('build'))
 app.use(express.json())
+app.use(express.static('build'))
+
 // morgan("tiny");
 morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan('tiny'))
@@ -54,28 +56,36 @@ app.get('/info', (req, res) => {
   res.send(html)
 })
 
-//single entry
-app.get('/api/persons/:id', (req, res) => {
-  // const personId = Number(req.params.id)
-  // console.log(personId)
-  // const person = persons.find((per) => per.id === personId)
-  // if (person) {
-  //   res.json(person)
-  // } else {
-  //   res.status(404).send('404 wrong id') //
-  // }
-
+// SINGLE ENTRY
+app.get('/api/persons/:id', (req, res, next) => {
   //no need to change to number anymore
-  Person.findById(req.params.id).then((returnedPerson) => {
-    res.json(returnedPerson)
-  })
+  Person.findById(req.params.id)
+    .then((returnedPerson) => {
+      if (returnedPerson) {
+        res.json(returnedPerson)
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch((err) => {
+      // console.error('person id error:', err)
+      // res
+      //   .status(400)
+      //   .send({ error: 'malformatted id, id must be 12bytes long' })
+      next(err)
+    })
 })
 
-//delete entry by id
-app.delete('/api/persons/:id', (req, res) => {
-  const personId = Number(req.params.id)
-  persons = persons.filter((person) => person.id !== personId)
-  res.status(204).send('just deleted')
+//DELETE entry by id
+app.delete('/api/persons/:id', (req, res, next) => {
+  // const personId = Number(req.params.id)
+  // persons = persons.filter((person) => person.id !== personId)
+  // res.status(204).send('just deleted')
+  Person.findByIdAndRemove(req.params.id)
+    .then((result) => {
+      res.status(204).end()
+    })
+    .catch((err) => next(err))
 })
 
 //add entry
@@ -121,7 +131,24 @@ app.post('/api/persons/', (req, res) => {
 
 //update entry
 
-//
+//UNKNOWN ENDPOINT
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'unknown endpoint' })
+}
+app.use(unknownEndpoint)
+
+// ERRROR
+const errorHandler = (err, req, res, next) => {
+  console.error(err.message)
+  if (err.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' })
+  }
+
+  next(err)
+}
+
+app.use(errorHandler)
+
 const PORT = process.env.PORT
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)

@@ -7,8 +7,26 @@ GET http://localhost:3001/info
 ### single entry
 GET http://localhost:3001/api/persons/64a329b7ee2135504bbbe271
 
-### delete
+### single wrong
+GET http://localhost:3001/api/persons/64a329b7ee2135504bbbe272
+
+### single wrong malformatted
+GET http://localhost:3001/api/persons/64a3
+
+### unknown endpoint del
+DELETE http://localhost:3001/api/wrongendpoint
+
+### unknown endpoint get
+GET http://localhost:3001/api/wrongendpoint
+
+### delete malformatted id
 DELETE http://localhost:3001/api/persons/4
+
+### delete wrong id
+DELETE http://localhost:3001/api/persons/64a329b7ee2135504bbbe272
+
+### delete ok
+DELETE http://localhost:3001/api/persons/64a54053e58b4230c283c03c
 
 ### wrong add
 POST http://localhost:3001/api/persons/
