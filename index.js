@@ -91,28 +91,15 @@ app.delete('/api/persons/:id', (req, res, next) => {
 //add entry
 // use express json moved
 const getNewId = () => {
-  // const maxId =
-  //   persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
-  // return maxId + 1;
-
   return Math.floor(Math.random() * 1000000)
 }
+
+// ADD PERSOM
 app.post('/api/persons/', (req, res) => {
   const newPerson = req.body
   if (!newPerson.name || !newPerson.number) {
     return res.status(400).json({ error: 'content missing' })
   }
-
-  //check if person exits
-  // if (persons.some((person) => person.name === newPerson.name)) {
-  //   return res.status(400).json({ error: 'name must be unique' })
-  // }
-
-  // const person = {
-  //   id: getNewId(),
-  //   name: req.body.name,
-  //   number: req.body.number,
-  // }
 
   const person = new Person({
     name: req.body.name,
@@ -130,7 +117,15 @@ app.post('/api/persons/', (req, res) => {
 })
 
 //update entry
+app.put('/api/persons/:id', (request, response, next) => {
+  const { name, number } = request.body
 
+  Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true })
+    .then((updatedPerson) => {
+      response.json(updatedPerson)
+    })
+    .catch((error) => next(error))
+})
 //UNKNOWN ENDPOINT
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: 'unknown endpoint' })
