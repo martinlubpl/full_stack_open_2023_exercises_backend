@@ -13,7 +13,7 @@ console.log('connecting to', url)
 mongoose.set('strictQuery', false)
 mongoose
   .connect(url)
-  .then((res) => {
+  .then(() => {
     console.log('connected mongodb')
   })
   .catch((err) => {

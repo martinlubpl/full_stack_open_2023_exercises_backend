@@ -14,7 +14,7 @@ morgan.token('body', (request) => JSON.stringify(request.body))
 app.use(morgan('tiny'))
 
 //const
-let persons = [
+/* let persons = [
   {
     id: 1,
     name: 'Arto Hellas',
@@ -35,7 +35,7 @@ let persons = [
     name: 'Mary Poppendieck',
     number: '39-23-6423122',
   },
-]
+] */
 
 const Person = require('./models/person')
 
@@ -85,7 +85,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
   // persons = persons.filter((person) => person.id !== personId)
   // res.status(204).send('just deleted')
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end()
     })
     .catch((err) => next(err))
@@ -93,9 +93,9 @@ app.delete('/api/persons/:id', (req, res, next) => {
 
 //add entry
 // use express json moved
-const getNewId = () => {
+/* const getNewId = () => {
   return Math.floor(Math.random() * 1000000)
-}
+} */
 
 // ADD PERSON
 app.post('/api/persons/', (req, res, next) => {
