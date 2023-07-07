@@ -97,8 +97,8 @@ const getNewId = () => {
   return Math.floor(Math.random() * 1000000)
 }
 
-// ADD PERSOM
-app.post('/api/persons/', (req, res) => {
+// ADD PERSON
+app.post('/api/persons/', (req, res, next) => {
   const newPerson = req.body
   if (!newPerson.name || !newPerson.number) {
     return res.status(400).json({ error: 'content missing' })
@@ -111,9 +111,12 @@ app.post('/api/persons/', (req, res) => {
 
   console.log(person)
   // persons = persons.concat(person)
-  person.save().then((savedPerson) => {
-    res.json(savedPerson)
-  })
+  person
+    .save()
+    .then((savedPerson) => {
+      res.json(savedPerson)
+    })
+    .catch((err) => next(err))
 
   // console.log(persons);
   // res.json(person)
@@ -123,11 +126,15 @@ app.post('/api/persons/', (req, res) => {
 app.put('/api/persons/:id', (request, response, next) => {
   const { name, number } = request.body
 
-  Person.findByIdAndUpdate(request.params.id, { name, number }, { new: true })
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { name, number },
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then((updatedPerson) => {
       response.json(updatedPerson)
     })
-    .catch((error) => next(error))
+    .catch((err) => next(err))
 })
 //UNKNOWN ENDPOINT
 const unknownEndpoint = (req, res) => {
@@ -140,6 +147,8 @@ const errorHandler = (err, req, res, next) => {
   console.error(err.message)
   if (err.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' })
+  } else if (err.name === 'ValidationError') {
+    return res.status(400).json({ error: err.message })
   }
 
   next(err)

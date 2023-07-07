@@ -43,5 +43,23 @@ content-type: application/json
 
 {
   "name": "Marcin",
-  "number": "555"
+  "number": "555555555"
+}
+
+### validate add
+POST http://localhost:3001/api/persons/
+content-type: application/json
+
+{
+  "name": "Ma",
+  "number": "555555555"
+}
+
+### update + validate number too short
+PUT http://localhost:3001/api/persons/64a3c4bded613d33ad2db13c
+content-type: application/json
+
+{
+  "name": "test1",
+  "number": "55"
 }
